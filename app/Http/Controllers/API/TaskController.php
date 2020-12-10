@@ -88,6 +88,57 @@ class TaskController extends Controller
     }
 
 
+    public function updatestatus(Request $request, $id)
+    {   
+        $validator = Validator::make($request->all(), [
+            'id_status'       => 'required|integer|exists:status,id',
+        ]);
+
+        DB::beginTransaction();
+        try{
+       
+            $store              = Task::where('id',$id)->first();
+            if(empty($store)){
+                return response()->json([
+                    'success' => false,
+                    'status' => 401,
+                    'data'=> "task tidak ada"
+                ]);
+             
+            }
+            if($store->id_user_send != Auth::user()->id){
+                return response()->json([
+                    'success' => false,
+                    'status' => 401,
+                    'data'=> "maaf anda tidak ada akses untuk update status task"
+                ]);
+            }
+            
+            $update        = $store->update([
+                'id_status'     => $request->id_status
+            ]); 
+            
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'status' => 200,
+                'data'=> $store
+            ]);
+        
+          
+        } catch(\Error $e){
+
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'status' => 401,
+                'data'=> "Gagal Update Status Task"
+            ]);
+
+        }    
+
+    }
+
     public function update(Request $request, $id)
     {   
         $validator = Validator::make($request->all(), [

@@ -20,11 +20,16 @@ class TaskController extends Controller
 
     public function index(Request $request)
     {            
-        $data = Task::paginate($request->query('limit') ?? Constant::LIMIT_PAGINATION);
-        foreach ($data as $item) {
-            if (!empty($item->logo)) {
-                $item->logo = env('BASE_API') . Storage::url($item->logo);
-            }
+
+        $status             = $request->query('status');
+
+
+        if(!empty($status)){
+            $data =  Task::where("task.id_status",$status)
+                    ->paginate($request->query('limit') ?? Constant::LIMIT_PAGINATION);
+        }else{
+
+            $data = Task::paginate($request->query('limit') ?? Constant::LIMIT_PAGINATION);
         }
 
         return response()->json([

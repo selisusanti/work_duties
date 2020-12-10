@@ -22,4 +22,14 @@ Route::post('register', 'API\UserController@register');
 
 Route::group(['middleware' => 'auth:api'], function(){
     Route::post('details', 'API\UserController@details');
+
+    Route::group([    
+        'prefix' => 'task'
+    ], function () {    
+        Route::get('', 'API\TaskController@index');
+        Route::post('create', 'API\TaskController@create');
+        Route::put('update/{id}', 'API\TaskController@update');
+        Route::delete('delete/{id}', 'API\TaskController@delete');
+    });
+
 });

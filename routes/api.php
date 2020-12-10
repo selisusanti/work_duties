@@ -29,6 +29,7 @@ Route::group(['middleware' => 'auth:api'], function(){
         Route::get('', 'API\TaskController@index');
         Route::post('create', 'API\TaskController@create');
         Route::put('update/{id}', 'API\TaskController@update');
+        Route::put('updatestatus/{id}', 'API\TaskController@updatestatus');
         Route::delete('delete/{id}', 'API\TaskController@delete');
     });
 

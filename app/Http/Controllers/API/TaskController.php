@@ -5,10 +5,13 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Task;
+use App\User;
+use App\Mail\SendMail;
 use App\Constants\Constant;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use DB;
+use Mail;
 
 class TaskController extends Controller
 {
@@ -67,6 +70,12 @@ class TaskController extends Controller
             ]);
 
             DB::commit();
+
+            $detailuser              = User::where('id',$request->id_user_send)->first();
+            $nama = $detailuser->name;
+            $email = $detailuser->email;
+            Mail::to($email)->send(new SendMail($nama));
+
             return response()->json([
                 'success' => true,
                 'status' => 200,
